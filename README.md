@@ -34,13 +34,16 @@ bash tools/dist_test.sh configs/retinanet/retinanet_r50_fpn_2x_coco.py $new_mmde
 ```
 ## Results
 
-|    Model    | Backbone  | mAP  | config | weight |
-| :---------: | :-------: | :--: | :----: | :----: |
-|  RetinaNet  | ResNet-50 | 40.7 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/retinanet/retinanet_r50_fpn_2x_coco.py)|        |
-| Faster RCNN | ResNet-50 | 42.0 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn/faster_rcnn_r50_fpn_2x_coco.py)|        |
-|  RepPoints  | ResNet-50 | 42.0 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/reppoints/reppoints_moment_r50_fpn_gn-neck+head_2x_coco.py)|        |
-|    FCOS     | ResNet-50 | 42.7 | [config](https://github.com/yzd-v/FGD/blob/master/configs/fcos/fcos_center-normbbox-giou_r50_caffe_fpn_gn-head_mstrain_1x_coco.py)|        |
-|  MaskRCNN   | ResNet-50 | 42.1 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py)|        |
+|    Model    |  Backbone  | mAP  |                            config                            |                          weight                          | code |
+| :---------: | :--------: | :--: | :----------------------------------------------------------: | :------------------------------------------------------: | :--: |
+|  RetinaNet  | ResNet-50  | 40.7 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/retinanet/retinanet_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/1TwF9W13eHg6Sxkrr-4VTqg) | wsfw |
+|  RetinaNet  | ResNet-101 | 41.7 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/retinanet/retinanet_r101_fpn_2x_coco.py) |                                                          |      |
+| Faster RCNN | ResNet-50  | 42.0 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn/faster_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/14WjoMqxILoPaKfY5QsCK8w) | dgpf |
+| Faster RCNN | ResNet-101 | 44.1 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn/faster_rcnn_r101_fpn_2x_coco.py) |                                                          |      |
+|  RepPoints  | ResNet-50  | 42.0 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/reppoints/reppoints_moment_r50_fpn_gn-neck+head_2x_coco.py) | [baidu](https://pan.baidu.com/s/1EJo9uQuZhimm7HI92TNThQ) | qx5d |
+|  RepPoints  | ResNet-101 | 43.8 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/reppoints/reppoints_moment_r101_fpn_gn-neck+head_2x_coco.py) |                                                          |      |
+|    FCOS     | ResNet-50  | 42.7 | [config](https://github.com/yzd-v/FGD/blob/master/configs/fcos/fcos_center-normbbox-giou_r50_caffe_fpn_gn-head_mstrain_1x_coco.py) | [baidu](https://pan.baidu.com/s/16uCTa81ZzG7EoizdfnXhzQ) | sedt |
+|  MaskRCNN   | ResNet-50  | 42.1 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/101eOFcD8JDwqrFuYcxcBIA) | sv8m |
 
 
 
