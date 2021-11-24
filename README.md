@@ -1,4 +1,5 @@
 # FGD
+Paper: [Focal and Global Knowledge Distillation for Detectors](https://arxiv.org/abs/2111.11837)
 ## Install MMDetection and MS COCO2017
   - Our codes are based on [MMDetection](https://github.com/open-mmlab/mmdetection). Please follow the installation of MMDetection and make sure you can run it successfully.
   - This repo uses mmdet==2.11.0 and mmcv-full==1.2.4
