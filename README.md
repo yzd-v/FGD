@@ -47,6 +47,16 @@ bash tools/dist_test.sh configs/retinanet/retinanet_r50_fpn_2x_coco.py $new_mmde
 |  MaskRCNN   | ResNet-50  | 42.1 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/101eOFcD8JDwqrFuYcxcBIA) | sv8m |
 
 
+## Citation
+```
+@article{yang2021focal,
+  title={Focal and Global Knowledge Distillation for Detectors},
+  author={Yang, Zhendong and Li, Zhe and Jiang, Xiaohu and Gong, Yuan and Yuan, Zehuan and Zhao, Danpei and Yuan, Chun},
+  journal={arXiv preprint arXiv:2111.11837},
+  year={2021}
+}
+```
+
 
 ## Acknowledgement
 
