@@ -81,8 +81,7 @@ class DetectionDistiller(BaseDetector):
                 self.distill_losses[loss_name] = build_distill_loss(item_loss)
     def base_parameters(self):
         return nn.ModuleList([self.student,self.distill_losses])
-    def discriminator_parameters(self):
-        return self.discriminator
+
 
     @property
     def with_neck(self):
@@ -164,7 +163,7 @@ class DetectionDistiller(BaseDetector):
     def simple_test(self, img, img_metas, **kwargs):
         return self.student.simple_test(img, img_metas, **kwargs)
     def aug_test(self, imgs, img_metas, **kwargs):
-        return self.student.aug_test(img, img_metas, **kwargs)
+        return self.student.aug_test(imgs, img_metas, **kwargs)
     def extract_feat(self, imgs):
         """Extract features from images."""
         return self.student.extract_feat(imgs)
