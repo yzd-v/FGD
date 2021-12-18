@@ -29,9 +29,8 @@ class DetectionDistiller(BaseDetector):
                                         train_cfg=teacher_cfg.get('train_cfg'),
                                         test_cfg=teacher_cfg.get('test_cfg'))
         self.init_weights_teacher(teacher_pretrained)
-
-        
         self.teacher.eval()
+
         self.student= build_detector(student_cfg.model,
                                         train_cfg=student_cfg.get('train_cfg'),
                                         test_cfg=student_cfg.get('test_cfg'))
@@ -47,49 +46,21 @@ class DetectionDistiller(BaseDetector):
             state_dict = OrderedDict(all_name)
             load_state_dict(self.student, state_dict)
 
-        
-
         self.distill_losses = nn.ModuleDict()
-
         self.distill_cfg = distill_cfg
-        student_modules = dict(self.student.named_modules())
-        teacher_modules = dict(self.teacher.named_modules())
-        def regitster_hooks(student_module,teacher_module):
-            def hook_teacher_forward(module, input, output):
-                
-                    self.register_buffer(teacher_module,output)
-                
-            def hook_student_forward(module, input, output):
-
-                    self.register_buffer( student_module,output )
-            return hook_teacher_forward,hook_student_forward
-        
         for item_loc in distill_cfg:
-            
-            student_module = 'student_' + item_loc.student_module.replace('.','_')
-            teacher_module = 'teacher_' + item_loc.teacher_module.replace('.','_')
-
-            self.register_buffer(student_module,None)
-            self.register_buffer(teacher_module,None)
-
-            hook_teacher_forward,hook_student_forward = regitster_hooks(student_module ,teacher_module )
-            teacher_modules[item_loc.teacher_module].register_forward_hook(hook_teacher_forward)
-            student_modules[item_loc.student_module].register_forward_hook(hook_student_forward)
-
             for item_loss in item_loc.methods:
                 loss_name = item_loss.name
                 self.distill_losses[loss_name] = build_distill_loss(item_loss)
+
     def base_parameters(self):
         return nn.ModuleList([self.student,self.distill_losses])
-
 
     @property
     def with_neck(self):
         """bool: whether the detector has a neck"""
         return hasattr(self.student, 'neck') and self.student.neck is not None
 
-    # TODO: these properties need to be carefully handled
-    # for both single stage & two stage detectors
     @property
     def with_shared_head(self):
         """bool: whether the detector has a shared head in the RoI Head"""
@@ -134,30 +105,17 @@ class DetectionDistiller(BaseDetector):
             dict[str, Tensor]: A dictionary of loss components(student's losses and distiller's losses).
         """
        
-
         with torch.no_grad():
             self.teacher.eval()
-            loss = self.teacher.extract_feat(img)
+            fea_t = self.teacher.extract_feat(img)
            
-        student_loss = self.student.forward_train(img, img_metas, **kwargs)
-        gt_info = dict(gt_bboxes = kwargs['gt_bboxes'], gt_labels = kwargs['gt_labels'])
+        student_feat = self.student.extract_feat(img)
+        student_loss = self.student.bbox_head.forward_train(student_feat, img_metas, **kwargs)
         
-        
-        buffer_dict = dict(self.named_buffers())
-        for item_loc in self.distill_cfg:
-            
-            student_module = 'student_' + item_loc.student_module.replace('.','_')
-            teacher_module = 'teacher_' + item_loc.teacher_module.replace('.','_')
-            
-            student_feat = buffer_dict[student_module]
-            teacher_feat = buffer_dict[teacher_module]
-
-            for item_loss in item_loc.methods:
-                loss_name = item_loss.name
-                
-                student_loss[ loss_name] = self.distill_losses[loss_name](student_feat,teacher_feat,gt_info['gt_bboxes'], img_metas)
-        
-        
+        for i in range(len(student_feat)):
+            loss_name = 'loss_fgd_fpn_'+str(i)
+            student_loss[loss_name] = self.distill_losses[loss_name](student_feat[i],fea_t[i].detach(),kwargs['gt_bboxes'],img_metas)
+          
         return student_loss
     
     def simple_test(self, img, img_metas, **kwargs):
