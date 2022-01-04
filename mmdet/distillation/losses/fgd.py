@@ -75,14 +75,12 @@ class FeatureLoss(nn.Module):
         Mask_fg = torch.zeros_like(S_attention_t)
         Mask_bg = torch.ones_like(S_attention_t)
         wmin,wmax,hmin,hmax = [],[],[],[]
-        scale_bboxes = []
         for i in range(N):
             new_boxxes = torch.ones_like(gt_bboxes[i])
             new_boxxes[:, 0] = gt_bboxes[i][:, 0]/img_metas[i]['img_shape'][1]*W
             new_boxxes[:, 2] = gt_bboxes[i][:, 2]/img_metas[i]['img_shape'][1]*W
             new_boxxes[:, 1] = gt_bboxes[i][:, 1]/img_metas[i]['img_shape'][0]*H
             new_boxxes[:, 3] = gt_bboxes[i][:, 3]/img_metas[i]['img_shape'][0]*H
-            scale_bboxes.append(new_boxxes)
 
             wmin.append(torch.floor(new_boxxes[:, 0]).int())
             wmax.append(torch.ceil(new_boxxes[:, 2]).int())
@@ -92,8 +90,8 @@ class FeatureLoss(nn.Module):
             area = 1.0/(hmax[i].view(1,-1)+1-hmin[i].view(1,-1))/(wmax[i].view(1,-1)+1-wmin[i].view(1,-1))
 
             for j in range(len(gt_bboxes[i])):
-                Mask_fg[i][wmin[i][j]:wmax[i][j]+1, hmin[i][j]:hmax[i][j]+1] = \
-                        torch.maximum(Mask_fg[i][wmin[i][j]:wmax[i][j]+1, hmin[i][j]:hmax[i][j]+1], area[0][j])
+                Mask_fg[i][hmin[i][j]:hmax[i][j]+1, wmin[i][j]:wmax[i][j]+1] = \
+                        torch.maximum(Mask_fg[i][hmin[i][j]:hmax[i][j]+1, wmin[i][j]:wmax[i][j]+1], area[0][j])
 
             Mask_bg[i] = torch.where(Mask_fg[i]>0, 0, 1)
             if torch.sum(Mask_bg[i]):
