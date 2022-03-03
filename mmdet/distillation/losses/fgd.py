@@ -35,6 +35,11 @@ class FeatureLoss(nn.Module):
         self.beta_fgd = beta_fgd
         self.gamma_fgd = gamma_fgd
         self.lambda_fgd = lambda_fgd
+
+        if student_channels != teacher_channels:
+            self.align = nn.Conv2d(student_channels, teacher_channels, kernel_size=1, stride=1, padding=0)
+        else:
+            self.align = None
         
         self.conv_mask_s = nn.Conv2d(teacher_channels, 1, kernel_size=1)
         self.conv_mask_t = nn.Conv2d(teacher_channels, 1, kernel_size=1)
@@ -67,6 +72,9 @@ class FeatureLoss(nn.Module):
         """
         assert preds_S.shape[-2:] == preds_T.shape[-2:],'the output dim of teacher and student differ'
 
+        if self.align is not None:
+            preds_S = self.align(preds_S)
+        
         N,C,H,W = preds_S.shape
 
         S_attention_t, C_attention_t = self.get_attention(preds_T, self.temp)
