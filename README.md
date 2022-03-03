@@ -1,5 +1,5 @@
 # FGD
-Paper: [Focal and Global Knowledge Distillation for Detectors](https://arxiv.org/abs/2111.11837)
+CVPR 2022 Paper: [Focal and Global Knowledge Distillation for Detectors](https://arxiv.org/abs/2111.11837)
 ## Install MMDetection and MS COCO2017
   - Our codes are based on [MMDetection](https://github.com/open-mmlab/mmdetection). Please follow the installation of MMDetection and make sure you can run it successfully.
   - This repo uses mmdet==2.11.0 and mmcv-full==1.2.4
@@ -37,16 +37,22 @@ bash tools/dist_test.sh configs/retinanet/retinanet_r50_fpn_2x_coco.py $new_mmde
 ```
 ## Results
 
-|    Model    |  Backbone  | mAP  |                            config                            |                          weight                          | code |
-| :---------: | :--------: | :--: | :----------------------------------------------------------: | :------------------------------------------------------: | :--: |
-|  RetinaNet  | ResNet-50  | 40.7 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/retinanet/retinanet_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/1TwF9W13eHg6Sxkrr-4VTqg) | wsfw |
-|  RetinaNet  | ResNet-101 | 41.7 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/retinanet/retinanet_r101_fpn_2x_coco.py) |                                                          |      |
-| Faster RCNN | ResNet-50  | 42.0 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn/faster_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/14WjoMqxILoPaKfY5QsCK8w) | dgpf |
-| Faster RCNN | ResNet-101 | 44.1 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn/faster_rcnn_r101_fpn_2x_coco.py) |                                                          |      |
-|  RepPoints  | ResNet-50  | 42.0 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/reppoints/reppoints_moment_r50_fpn_gn-neck+head_2x_coco.py) | [baidu](https://pan.baidu.com/s/1EJo9uQuZhimm7HI92TNThQ) | qx5d |
-|  RepPoints  | ResNet-101 | 43.8 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/reppoints/reppoints_moment_r101_fpn_gn-neck+head_2x_coco.py) |                                                          |      |
-|    FCOS     | ResNet-50  | 42.7 | [config](https://github.com/yzd-v/FGD/blob/master/configs/fcos/fcos_center-normbbox-giou_r50_caffe_fpn_gn-head_mstrain_1x_coco.py) | [baidu](https://pan.baidu.com/s/16uCTa81ZzG7EoizdfnXhzQ) | sedt |
-|  MaskRCNN   | ResNet-50  | 42.1 | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/101eOFcD8JDwqrFuYcxcBIA) | sv8m |
+|    Model    |  Backbone  | Baseline(mAP) | +FGD(mAP) |                            config                            |                          weight                          | code |
+| :---------: | :--------: | :-----------: | :-------: | :----------------------------------------------------------: | :------------------------------------------------------: | :--: |
+|  RetinaNet  | ResNet-50  |     37.4      |   40.7    | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/retinanet/retinanet_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/1TwF9W13eHg6Sxkrr-4VTqg) | wsfw |
+|  RetinaNet  | ResNet-101 |     38.9      |   41.7    | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/retinanet/retinanet_r101_fpn_2x_coco.py) |                                                          |      |
+| Faster RCNN | ResNet-50  |     38.4      |   42.0    | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn/faster_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/14WjoMqxILoPaKfY5QsCK8w) | dgpf |
+| Faster RCNN | ResNet-101 |     39.8      |   44.1    | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn/faster_rcnn_r101_fpn_2x_coco.py) |                                                          |      |
+|  RepPoints  | ResNet-50  |     38.6      |   42.0    | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/reppoints/reppoints_moment_r50_fpn_gn-neck+head_2x_coco.py) | [baidu](https://pan.baidu.com/s/1EJo9uQuZhimm7HI92TNThQ) | qx5d |
+|  RepPoints  | ResNet-101 |     40.5      |   43.8    | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/reppoints/reppoints_moment_r101_fpn_gn-neck+head_2x_coco.py) |                                                          |      |
+|    FCOS     | ResNet-50  |     38.5      |   42.7    | [config](https://github.com/yzd-v/FGD/blob/master/configs/fcos/fcos_center-normbbox-giou_r50_caffe_fpn_gn-head_mstrain_1x_coco.py) | [baidu](https://pan.baidu.com/s/16uCTa81ZzG7EoizdfnXhzQ) | sedt |
+|  MaskRCNN   | ResNet-50  |     39.2      |   42.1    | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/101eOFcD8JDwqrFuYcxcBIA) | sv8m |
+|     GFL     | ResNet-50  |     40.2      |   43.5    | [config](https://github.com/open-mmlab/mmdetection/blob/master/configs/gfl/gfl_r50_fpn_1x_coco.py) |                                                          |      |
+
+|  Model   | Backbone  | Baseline(Mask mAP) | +FGD(Mask mAP) |                            config                            |                          weight                          | code |
+| :------: | :-------: | :----------------: | :------------: | :----------------------------------------------------------: | :------------------------------------------------------: | :--: |
+|   SOLO   | ResNet-50 |        33.1        |      36.0      | [config](https://github.com/open-mmlab/mmdetection/blob/master/configs/solo/solo_r50_fpn_1x_coco.py) |                                                          |      |
+| MaskRCNN | ResNet-50 |        35.4        |      37.8      | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/101eOFcD8JDwqrFuYcxcBIA) | sv8m |
 
 
 ## Citation
