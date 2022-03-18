@@ -3,9 +3,11 @@ _base_ = [
 ]
 # model settings
 find_unused_parameters=True
-alpha_fgd=0.00002
-lambda_fgd=0.65
-decouple=False
+temp=0.5
+alpha_fgd=0.001
+beta_fgd=0.0005
+gamma_fgd=0.0005
+lambda_fgd=0.000005
 distiller = dict(
     type='DetectionDistiller',
     teacher_pretrained = 'Solo_r101_3x.pth',
@@ -20,7 +22,6 @@ distiller = dict(
                                        teacher_channels = 256,
                                        alpha_fgd=alpha_fgd,
                                        lambda_fgd=lambda_fgd,
-                                       decouple=decouple,
                                        )
                                 ]
                         ),
@@ -33,7 +34,6 @@ distiller = dict(
                                        teacher_channels = 256,
                                        alpha_fgd=alpha_fgd,
                                        lambda_fgd=lambda_fgd,
-                                       decouple=decouple,
                                        )
                                 ]
                         ),
@@ -46,7 +46,6 @@ distiller = dict(
                                        teacher_channels = 256,
                                        alpha_fgd=alpha_fgd,
                                        lambda_fgd=lambda_fgd,
-                                       decouple=decouple,
                                        )
                                 ]
                         ),
@@ -59,7 +58,6 @@ distiller = dict(
                                        teacher_channels = 256,
                                        alpha_fgd=alpha_fgd,
                                        lambda_fgd=lambda_fgd,
-                                       decouple=decouple,
                                        )
                                 ]
                         ),
