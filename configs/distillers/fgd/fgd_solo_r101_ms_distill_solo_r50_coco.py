@@ -20,7 +20,10 @@ distiller = dict(
                                        name='loss_fgd_fpn_3',
                                        student_channels = 256,
                                        teacher_channels = 256,
+                                       temp = temp,
                                        alpha_fgd=alpha_fgd,
+                                       beta_fgd=beta_fgd,
+                                       gamma_fgd=gamma_fgd,
                                        lambda_fgd=lambda_fgd,
                                        )
                                 ]
@@ -32,7 +35,10 @@ distiller = dict(
                                        name='loss_fgd_fpn_2',
                                        student_channels = 256,
                                        teacher_channels = 256,
+                                       temp = temp,
                                        alpha_fgd=alpha_fgd,
+                                       beta_fgd=beta_fgd,
+                                       gamma_fgd=gamma_fgd,
                                        lambda_fgd=lambda_fgd,
                                        )
                                 ]
@@ -44,7 +50,10 @@ distiller = dict(
                                        name='loss_fgd_fpn_1',
                                        student_channels = 256,
                                        teacher_channels = 256,
+                                       temp = temp,
                                        alpha_fgd=alpha_fgd,
+                                       beta_fgd=beta_fgd,
+                                       gamma_fgd=gamma_fgd,
                                        lambda_fgd=lambda_fgd,
                                        )
                                 ]
@@ -56,7 +65,10 @@ distiller = dict(
                                        name='loss_fgd_fpn_0',
                                        student_channels = 256,
                                        teacher_channels = 256,
+                                       temp = temp,
                                        alpha_fgd=alpha_fgd,
+                                       beta_fgd=beta_fgd,
+                                       gamma_fgd=gamma_fgd,
                                        lambda_fgd=lambda_fgd,
                                        )
                                 ]
