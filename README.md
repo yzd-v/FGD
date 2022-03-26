@@ -54,6 +54,10 @@ bash tools/dist_test.sh configs/retinanet/retinanet_r50_fpn_2x_coco.py $new_mmde
 |   SOLO   | ResNet-50 |        33.1        |      36.0      | [config](https://github.com/open-mmlab/mmdetection/blob/master/configs/solo/solo_r50_fpn_1x_coco.py) |                                                          |      |
 | MaskRCNN | ResNet-50 |        35.4        |      37.8      | [config](https://github.com/open-mmlab/mmdetection/tree/master/configs/mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py) | [baidu](https://pan.baidu.com/s/101eOFcD8JDwqrFuYcxcBIA) | sv8m |
 
+| Student | Teacher | Baseline(mAP) | +FGD(mAP) |                            config                            | weight | code |
+| :-----: | :-----: | :-----------: | :-------: | :----------------------------------------------------------: | :----: | :--: |
+| YOLOX-m | YOLOX-l |     45.9      |   46.6    | [config](https://github.com/open-mmlab/mmdetection/blob/master/configs/yolox/yolox_m_8x8_300e_coco.py) |   [baidu](https://pan.baidu.com/s/1oagBUUV9RJReRdd4O-PV6Q?pwd=af9g)     |   af9g   |
+1. Please refer branch yolox 
 
 ## Citation
 ```
