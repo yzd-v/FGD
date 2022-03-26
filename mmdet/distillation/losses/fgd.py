@@ -7,7 +7,7 @@ from ..builder import DISTILL_LOSSES
 @DISTILL_LOSSES.register_module()
 class FeatureLoss(nn.Module):
 
-    """PyTorch version of `Focal and Global Knowledge Distillation for Detectors`
+    """PyTorch version of `Feature Distillation for General Detectors`
    
     Args:
         student_channels(int): Number of channels in the student's feature map.
@@ -16,7 +16,7 @@ class FeatureLoss(nn.Module):
         name (str): the loss name of the layer
         alpha_fgd (float, optional): Weight of fg_loss. Defaults to 0.001
         beta_fgd (float, optional): Weight of bg_loss. Defaults to 0.0005
-        gamma_fgd (float, optional): Weight of mask_loss. Defaults to 0.001
+        gamma_fgd (float, optional): Weight of mask_loss. Defaults to 0.0005
         lambda_fgd (float, optional): Weight of relation_loss. Defaults to 0.000005
     """
     def __init__(self,
@@ -26,7 +26,7 @@ class FeatureLoss(nn.Module):
                  temp=0.5,
                  alpha_fgd=0.001,
                  beta_fgd=0.0005,
-                 gamma_fgd=0.001,
+                 gamma_fgd=0.0005,
                  lambda_fgd=0.000005,
                  ):
         super(FeatureLoss, self).__init__()
@@ -35,7 +35,7 @@ class FeatureLoss(nn.Module):
         self.beta_fgd = beta_fgd
         self.gamma_fgd = gamma_fgd
         self.lambda_fgd = lambda_fgd
-
+    
         if student_channels != teacher_channels:
             self.align = nn.Conv2d(student_channels, teacher_channels, kernel_size=1, stride=1, padding=0)
         else:
@@ -61,6 +61,8 @@ class FeatureLoss(nn.Module):
                 preds_S,
                 preds_T,
                 gt_bboxes,
+                scale_y,
+                scale_x,
                 img_metas):
         """Forward function.
         Args:
@@ -74,21 +76,21 @@ class FeatureLoss(nn.Module):
 
         if self.align is not None:
             preds_S = self.align(preds_S)
-        
+
         N,C,H,W = preds_S.shape
 
         S_attention_t, C_attention_t = self.get_attention(preds_T, self.temp)
         S_attention_s, C_attention_s = self.get_attention(preds_S, self.temp)
-
+        
         Mask_fg = torch.zeros_like(S_attention_t)
         Mask_bg = torch.ones_like(S_attention_t)
         wmin,wmax,hmin,hmax = [],[],[],[]
         for i in range(N):
             new_boxxes = torch.ones_like(gt_bboxes[i])
-            new_boxxes[:, 0] = gt_bboxes[i][:, 0]/img_metas[i]['img_shape'][1]*W
-            new_boxxes[:, 2] = gt_bboxes[i][:, 2]/img_metas[i]['img_shape'][1]*W
-            new_boxxes[:, 1] = gt_bboxes[i][:, 1]/img_metas[i]['img_shape'][0]*H
-            new_boxxes[:, 3] = gt_bboxes[i][:, 3]/img_metas[i]['img_shape'][0]*H
+            new_boxxes[:, 0] = gt_bboxes[i][:, 0]/img_metas[i]['img_shape'][1]*W/scale_x
+            new_boxxes[:, 2] = gt_bboxes[i][:, 2]/img_metas[i]['img_shape'][1]*W/scale_x
+            new_boxxes[:, 1] = gt_bboxes[i][:, 1]/img_metas[i]['img_shape'][0]*H/scale_y
+            new_boxxes[:, 3] = gt_bboxes[i][:, 3]/img_metas[i]['img_shape'][0]*H/scale_y
 
             wmin.append(torch.floor(new_boxxes[:, 0]).int())
             wmax.append(torch.ceil(new_boxxes[:, 2]).int())
@@ -106,16 +108,14 @@ class FeatureLoss(nn.Module):
                 Mask_bg[i] /= torch.sum(Mask_bg[i])
 
         fg_loss, bg_loss = self.get_fea_loss(preds_S, preds_T, Mask_fg, Mask_bg, 
-                           C_attention_s, C_attention_t, S_attention_s, S_attention_t)
+                        C_attention_s, C_attention_t, S_attention_s, S_attention_t)
         mask_loss = self.get_mask_loss(C_attention_s, C_attention_t, S_attention_s, S_attention_t)
         rela_loss = self.get_rela_loss(preds_S, preds_T)
 
-
         loss = self.alpha_fgd * fg_loss + self.beta_fgd * bg_loss \
-               + self.gamma_fgd * mask_loss + self.lambda_fgd * rela_loss
+            + self.gamma_fgd * mask_loss + self.lambda_fgd * rela_loss
             
-        return loss
-
+        return loss/scale_x/scale_y
 
     def get_attention(self, preds, temp):
         """ preds: Bs*C*W*H """

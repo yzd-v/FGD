@@ -7,9 +7,6 @@ from mmcv.runner import  load_checkpoint, _load_checkpoint, load_state_dict
 from ..builder import DISTILLER,build_distill_loss
 from collections import OrderedDict
 
-
-
-
 @DISTILLER.register_module()
 class DetectionDistiller(BaseDetector):
     """Base distiller for detectors.
@@ -21,6 +18,7 @@ class DetectionDistiller(BaseDetector):
                  student_cfg,
                  distill_cfg=None,
                  teacher_pretrained=None,
+                 yolox=False,
                  init_student=False):
 
         super(DetectionDistiller, self).__init__()
@@ -49,16 +47,17 @@ class DetectionDistiller(BaseDetector):
         self.distill_losses = nn.ModuleDict()
         self.distill_cfg = distill_cfg
 
+        self.yolox = yolox
+        if self.yolox:
+            self.bbox_head = self.student.bbox_head
+
         student_modules = dict(self.student.named_modules())
         teacher_modules = dict(self.teacher.named_modules())
         def regitster_hooks(student_module,teacher_module):
             def hook_teacher_forward(module, input, output):
-
                     self.register_buffer(teacher_module,output)
-                
             def hook_student_forward(module, input, output):
-
-                    self.register_buffer( student_module,output )
+                    self.register_buffer( student_module,output)
             return hook_teacher_forward,hook_student_forward
         
         for item_loc in distill_cfg:
@@ -76,9 +75,9 @@ class DetectionDistiller(BaseDetector):
             for item_loss in item_loc.methods:
                 loss_name = item_loss.name
                 self.distill_losses[loss_name] = build_distill_loss(item_loss)
+
     def base_parameters(self):
         return nn.ModuleList([self.student,self.distill_losses])
-
 
     @property
     def with_neck(self):
@@ -112,7 +111,6 @@ class DetectionDistiller(BaseDetector):
         checkpoint = load_checkpoint(self.teacher, path, map_location='cpu')
 
 
-
     def forward_train(self, img, img_metas, **kwargs):
 
         """
@@ -128,29 +126,28 @@ class DetectionDistiller(BaseDetector):
         Returns:
             dict[str, Tensor]: A dictionary of loss components(student's losses and distiller's losses).
         """
-       
-
-        with torch.no_grad():
-            self.teacher.eval()
-            feat = self.teacher.extract_feat(img)
-           
-        student_loss = self.student.forward_train(img, img_metas, **kwargs)
+        scale_y = 1.0
+        scale_x = 1.0
+        gt = kwargs['gt_bboxes']
+        if self.yolox:
+            scale_y = self.student._input_size[0] / self.student._default_input_size[0]
+            scale_x = self.student._input_size[1] / self.student._default_input_size[1]
+            student_loss, img, gt = self.student.forward_train(img, img_metas, **kwargs)
+        else:
+            student_loss = self.student.forward_train(img, img_metas, **kwargs)
         
+        with torch.no_grad():
+            fea_t = self.teacher.extract_feat(img)
         
         buffer_dict = dict(self.named_buffers())
         for item_loc in self.distill_cfg:
-            
             student_module = 'student_' + item_loc.student_module.replace('.','_')
             teacher_module = 'teacher_' + item_loc.teacher_module.replace('.','_')
-            
             student_feat = buffer_dict[student_module]
             teacher_feat = buffer_dict[teacher_module]
-
             for item_loss in item_loc.methods:
                 loss_name = item_loss.name
-                
-                student_loss[loss_name] = self.distill_losses[loss_name](student_feat,teacher_feat,kwargs['gt_bboxes'], img_metas)
-        
+                student_loss[loss_name] = self.distill_losses[loss_name](student_feat, teacher_feat, gt, scale_y, scale_x, img_metas)
         
         return student_loss
     
