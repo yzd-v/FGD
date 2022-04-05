@@ -12,7 +12,6 @@ distiller = dict(
     type='DetectionDistiller',
     teacher_pretrained = 'https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_l_8x8_300e_coco/yolox_l_8x8_300e_coco_20211126_140236-d3bd2b23.pth',
     init_student = False,
-    fgd = True,
     yolox = True,
     distill_cfg = [ dict(student_module = 'neck.out_convs.0',
                          teacher_module = 'neck.out_convs.0',
