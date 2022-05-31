@@ -5,6 +5,8 @@ CVPR 2022 Paper: [Focal and Global Knowledge Distillation for Detectors](https:/
   - This repo uses mmdet==2.11.0 and mmcv-full==1.2.4
   - If you want to use higher mmdet version, you may have to change the optimizer in apis/train.py and build_detector in tools/train.py.
   - For mmdet>=2.12.0, if you want to use inheriting strategy, you have to initalize the student with teacher's parameters after model.init_weights().
+## Higher mmdet and mmcv-full version
+  - You can refer [MGD](https://github.com/yzd-v/MGD) to change model.init_weights() in [train.py](https://github.com/yzd-v/FGD/tree/master/tools/train.py) and self.student.init_weights() in [distiller.py](https://github.com/yzd-v/FGD/tree/master/mmdet/distillation/distillers/detection_distiller.py).
 ## Add and Replace the codes
   - Add the configs/. in our codes to the configs/ in mmdetectin's codes.
   - Add the mmdet/distillation/. in our codes to the mmdet/ in mmdetectin's codes.
