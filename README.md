@@ -63,11 +63,12 @@ bash tools/dist_test.sh configs/retinanet/retinanet_r50_fpn_2x_coco.py $new_mmde
 
 ## Citation
 ```
-@article{yang2021focal,
-  title={Focal and Global Knowledge Distillation for Detectors},
+@inproceedings{yang2022focal,
+  title={Focal and global knowledge distillation for detectors},
   author={Yang, Zhendong and Li, Zhe and Jiang, Xiaohu and Gong, Yuan and Yuan, Zehuan and Zhao, Danpei and Yuan, Chun},
-  journal={arXiv preprint arXiv:2111.11837},
-  year={2021}
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={4643--4652},
+  year={2022}
 }
 ```
 
