@@ -14,6 +14,7 @@ def change_model(args):
             continue
     state_dict = OrderedDict(all_name)
     fgd_model['state_dict'] = state_dict
+    fgd_model.pop('optimizer')
     torch.save(fgd_model, args.output_path) 
 
            
