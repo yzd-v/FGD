@@ -1,7 +1,6 @@
 _base_ = 'fcos_r50_caffe_fpn_gn-head_1x_coco.py'
 
 model = dict(
-    pretrained='open-mmlab://detectron2/resnet50_caffe',
     bbox_head=dict(
         norm_on_bbox=True,
         centerness_on_reg=False,
